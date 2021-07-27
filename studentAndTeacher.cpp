@@ -25,11 +25,13 @@ class Person
 	string surname;
 	int age;
 	string idNumber;
+	string gender;
 	public:
 	void setName(string);
 	void setSurname(string);
 	void setAge(int);
 	void setIdNumber(string);
+	void setGender(string);
 
 	//get values
 	int getAge();
@@ -37,6 +39,28 @@ class Person
 
 };
 
+
+void Person::setGender(string s)
+{
+   s=s.substr(6,4);
+   int numberz;
+   numberz=stoi(s);
+   string genderzz;
+
+   if(numberz<=4999)
+   {
+	  genderzz="Male";
+
+   }
+   else
+   {
+	genderzz="Female";
+
+   }
+
+
+
+}
 void Person::setName(string n)
 {
 	name=n;
@@ -65,7 +89,7 @@ string Person::getDetails()
 	return studentz;
 }
 
-class Teacher:private Person
+class Teacher:public Person
 {
 	private:
 	string subjectName;
@@ -106,6 +130,43 @@ class Student:public Person
 
 };
 
+void readFromFile(string file)
+{
+	ifstream myfile(file);
+	 string line;
+
+    if(myfile.fail())
+		  {
+			  cout<<"Please make sure "+file+" is present"<<endl;
+		  }
+		  else
+		  {
+			  while(!myfile.eof())
+			  {
+				 while(getline(myfile,line))
+				 {
+					 cout<<line<<endl;
+
+				 }
+			  }
+		  }
+
+
+
+}
+
+
+void validateIdNumber(string s)
+{
+	if(s.length()<13)
+	{
+		cout<<"please enter a valid Id number with 13 characters";
+		cin>>s;
+    }
+}
+
+
+
 int _tmain(int argc, _TCHAR* argv[]) 
 {
 
@@ -120,14 +181,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	 Teacher t;
 	 Student s;
 
-	 do
-	 {
-		cout<<"Enter <1> to access student database"<<endl;
-		cout<<"Enter <2> to access teacher database"<<endl;
-		cin>>f;
-
-	 }while(f!=1 || f!=2);
-
 	 cout<<"=========================================="<<endl;
 	 //student database
 	 if(f==1)
@@ -137,39 +190,111 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout<<"Enter <2> to add new student/s"<<endl;
 		cin>>z;
 
-		do
-		{
-		  cout<<"Enter <1> to view all students"<<endl;
-		  cout<<"Enter <2> to add new student/s"<<endl;
-		  cin>>z;
-
-		}while(z!=1||z!=2);
+		 string fileName="students.txt";
 
 		if(z==1)
 		{
-		  ofstream myfile("file.txt");
 
-		  if(myfile.fail())
-		  {
-			  cout<<"Please make sure file is present"<<endl;
-		  }
-		  else
-		  {
-			  while(!myfile.eof())
-			  {
-
-              }
-          }
+			readFromFile(fileName);
 		}
 		if(z==2)
 		{
 
-        }
+			string name;
+			string surname;
+			string idNumber;
+			int age;
+
+
+			//write new details to students
+			cout<<"Enter Name: "<<endl;
+			cin>>name;
+			cout<<"Enter surname: "<<endl;
+			cin>>surname;
+			cout<<"Enter Id Number: "<<endl;
+			cin>>idNumber;
+			//validate id nuber t be 13 characters
+			validateIdNumber(idNumber);
+			s.setName(name);
+			s.setSurname(surname);
+			s.setIdNumber(idNumber);
+			s.setGender(idNumber);
+			string filez="student.txt";
+
+			ofstream file(filez);
+			string details=s.getDetails();
+
+			file.open(filez);
+
+			file<<details;
+
+
+		}
 	 }
+	 //teacher database
 	 if(f==2)
 	 {
+		int z;
+		cout<<"Enter <1> to view all teacher/s"<<endl;
+		cout<<"Enter <2> to add new teacher/s"<<endl;
+		cin>>z;
 
-     }
+
+	   string fileName="students.txt";
+		if(z==1)
+		{
+			readFromFile(fileName);
+		}
+
+		if(z==2)
+		{
+			ofstream myfile("teachers.txt");
+			string name;
+			string surname;
+			string idNumber;
+			float salary;
+			string classRoom;
+			string subject;
+
+
+			cout<<"Enter teacher name: ";
+			cin>> name;
+			cout<<"Enter teacher surname: ";
+			cin>>surname;
+			cout<<"Enter idNumber: ";
+			cin>>idNumber;
+			validateIdNumber(idNumber);
+
+			cout<<"Enter salary: ";
+			cin>>salary;
+			cout<<"Enter classRoom: ";
+			cin>>classRoom;
+			cout<<"Enter subject: ";
+			cin>>subject;
+
+
+
+			t.setName(name);
+			t.setSurname(surname);
+			t.setIdNumber(idNumber);
+			t.setSalary(salary);
+			t.setClassRoom(classRoom);
+			t.setSubjectName(subject);
+
+
+			string details=t.getDetails();
+			myfile<<details;
+
+
+
+
+		}
+
+
+
+	 }
+
+
 
 	_getch();
 	return 0;
