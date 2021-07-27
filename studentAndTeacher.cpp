@@ -13,6 +13,7 @@
 #include <conio.h>
 #include <string>
 #include <fstream>
+#include <ctime>
 
 
 
@@ -80,7 +81,17 @@ void Person::setIdNumber(string i)
 }
 int Person::getAge()
 {
-   return age;
+   //int i=stoi(idNumber);
+   //int final=i.substr(0,2);
+	string frag=idNumber.substr(0,2);
+	int i=stoi(frag);
+	time_t now = time(0);
+	tm *ltm=localtime(&now);
+
+	int year=ltm->tm_year;
+
+
+   return year;
 }
 string Person::getDetails()
 {
@@ -207,27 +218,37 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 			//write new details to students
-			cout<<"Enter Name: "<<endl;
+			cout<<"Enter Name: ";
 			cin>>name;
-			cout<<"Enter surname: "<<endl;
+			cout<<"Enter surname: ";
 			cin>>surname;
-			cout<<"Enter Id Number: "<<endl;
+			cout<<"Enter Id Number: ";
 			cin>>idNumber;
 			//validate id nuber t be 13 characters
 			validateIdNumber(idNumber);
 			s.setName(name);
+			s.getAge();
 			s.setSurname(surname);
 			s.setIdNumber(idNumber);
 			s.setGender(idNumber);
-			string filez="student.txt";
 
-			ofstream file(filez);
+
+			ofstream file;
 			string details=s.getDetails();
 
-			file.open(filez);
+			file.open(fileName);
 
-			file<<details;
 
+
+			if(file.is_open())
+			{
+				file<<details;
+			 }
+			else
+			{
+				 cout<<"Cannot access file"<<endl;
+
+			}
 
 		}
 	 }
@@ -280,6 +301,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			t.setSalary(salary);
 			t.setClassRoom(classRoom);
 			t.setSubjectName(subject);
+			t.getAge();
+
 
 
 			string details=t.getDetails();
